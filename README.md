@@ -1,12 +1,3 @@
-# 🏝️ ExploraVibe - Vibe Brasileira Moderna 2026
-
-**ExploraVibe** é uma plataforma premium de curadoria de experiências turísticas, focada no turismo de elite brasileiro. O projeto combina tecnologia de ponta (**Invisible AI**) com uma identidade visual ultra-moderna inspirada nas tendências de 2026.
-
-## 🚀 Vision 2026
-Transformamos o planejamento de viagens em uma jornada sensorial e personalizada:
-- **Identidade "Oceano Tropical"**: Gradientes vibrantes, Glassmorphism e Neumorphism suave.
-- **Invisible AI**: Motor de recomendação que entende sua vibe sem formulários chatos.
-- **Destinos de Elite**: Foco estratégico em **João Pessoa (PB)** e **Goiânia (GO)**.
 
 ## 🛠️ Stack Tecnológica
 - **Framework**: [Next.js 14](https://nextjs.org/) (App Router)
