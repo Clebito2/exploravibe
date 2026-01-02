@@ -101,7 +101,7 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         try {
             const usersRef = collection(db, "users");
             const q = query(usersRef, where("email", "==", email));
-            const querySnapshot = await getDocs, getDoc(q);
+            const querySnapshot = await getDocs(q);
 
             if (querySnapshot.empty) {
                 alert("Usuário não encontrado com este email.");
@@ -143,4 +143,5 @@ export const useTrips = () => {
     if (!context) throw new Error("useTrips must be used within TripProvider");
     return context;
 };
+
 
