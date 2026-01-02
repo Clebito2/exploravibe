@@ -291,7 +291,7 @@ export default function ReviewsPage() {
                                     onChange={(e) => setFormTravelerType(e.target.value as Review["travelerType"])}
                                     className="w-full px-6 py-4 rounded-xl bg-white border border-ocean/10 font-primary font-bold text-ocean outline-none focus:ring-4 focus:ring-ocean/5"
                                 >
-                                    {Object.entries(TRAVELER_TYPES).map(([key, label]) => (
+                                    {Object.entries(TRAVELER_TYPES || {}).map(([key, label]) => (
                                         <option key={key} value={key}>{label}</option>
                                     ))}
                                 </select>
@@ -405,7 +405,7 @@ export default function ReviewsPage() {
                                 <div className="flex items-center justify-between pt-6 border-t border-ocean/5">
                                     <div className="flex items-center gap-4 text-xs">
                                         <span className="px-4 py-2 bg-crystal rounded-full font-black text-ocean/60">
-                                            {TRAVELER_TYPES[review.travelerType]}
+                                            {review.travelerType && TRAVELER_TYPES[review.travelerType] ? TRAVELER_TYPES[review.travelerType] : "Viajante"}
                                         </span>
                                         <span className="text-ocean/40 font-bold">
                                             Visitou em {new Date(review.visitDate).toLocaleDateString("pt-BR", { month: "short", year: "numeric" })}
