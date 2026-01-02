@@ -19,7 +19,10 @@ export default function Login() {
         setLoading(true);
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            navigate("/");
+            // Check for redirect param
+            const params = new URLSearchParams(window.location.search);
+            const redirect = params.get("redirect") || "/";
+            navigate(redirect);
         } catch (err: any) {
             console.error("Login Error:", err.code);
             setError(mapAuthError(err.code));
@@ -34,7 +37,10 @@ export default function Login() {
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-            navigate("/");
+            // Check for redirect param
+            const params = new URLSearchParams(window.location.search);
+            const redirect = params.get("redirect") || "/";
+            navigate(redirect);
         } catch (err: any) {
             console.error("Google Login Error:", err.code);
             setError(mapAuthError(err.code));

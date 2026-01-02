@@ -28,8 +28,9 @@ export default function TripList() {
         try {
             await createTrip(newTripName);
             setNewTripName("");
-        } catch (e) {
-            alert("Erro ao criar roteiro.");
+        } catch (e: any) {
+            console.error(e);
+            alert(`Erro ao criar roteiro: ${e.message || e.code || "Erro desconhecido"}`);
         } finally {
             setIsCreating(false);
         }
