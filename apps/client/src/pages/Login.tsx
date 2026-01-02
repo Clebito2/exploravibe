@@ -32,10 +32,8 @@ export default function Login() {
         setLoading(true);
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            // Check for redirect param
-            const params = new URLSearchParams(window.location.search);
-            const redirect = params.get("redirect") || "/";
-            navigate(redirect);
+            // Login comum SEMPRE vai para Home
+            navigate("/", { replace: true });
         } catch (err: any) {
             console.error("Login Error:", err.code);
             setError(mapAuthError(err.code));
@@ -50,10 +48,8 @@ export default function Login() {
         const provider = new GoogleAuthProvider();
         try {
             await signInWithPopup(auth, provider);
-            // Check for redirect param
-            const params = new URLSearchParams(window.location.search);
-            const redirect = params.get("redirect") || "/";
-            navigate(redirect);
+            // Login comum SEMPRE vai para Home
+            navigate("/", { replace: true });
         } catch (err: any) {
             console.error("Google Login Error:", err.code);
             setError(mapAuthError(err.code));
@@ -175,7 +171,7 @@ export default function Login() {
 
                 <div className="text-center pt-8 border-t border-ocean/5 space-y-4">
                     <Link
-                        to="/admin"
+                        to="/admin/login"
                         className="text-[9px] font-black text-ocean/10 uppercase tracking-[0.4em] hover:text-ocean/30 transition-colors"
                     >
                         🔐 Área Restrita

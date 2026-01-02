@@ -50,7 +50,7 @@ export default function AdminLayout() {
                     <button
                         onClick={async () => {
                             await signOut(auth); // Sign out first to allow choosing another account
-                            navigate("/login?redirect=/admin");
+                            navigate("/admin/login?redirect=/admin");
                         }}
                         className="px-6 py-3 bg-white border border-ocean text-ocean rounded-xl font-bold"
                     >
