@@ -67,11 +67,11 @@ export default function Login() {
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <img
-                    src="/praia2.jpg"
+                    src="/pessoas-divertindo.jpg"
                     alt="Background"
-                    className="w-full h-full object-cover opacity-10"
+                    className="w-full h-full object-cover opacity-30"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/90"></div>
+                <div className="absolute inset-0 bg-gradient-to-b from-white/70 via-white/50 to-white/80"></div>
             </div>
 
             {/* Back to Home Button */}

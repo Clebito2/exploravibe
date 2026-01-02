@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useCart } from "@/lib/CartContext";
 import { useTrips } from "@/lib/TripContext";
 import { useAuth } from "@/lib/AuthContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import type { Experience } from "@exploravibe/shared";
 import { useExperiences } from "@/lib/useExperiences";
@@ -20,6 +20,10 @@ export default function ExperienceDetails() {
     const [travelers, setTravelers] = useState(1);
     const [selectedTripId, setSelectedTripId] = useState("");
     const [addingToTrip, setAddingToTrip] = useState(false);
+    // Scroll to top when page loads or experience changes
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [id]);
 
     const experience = experiences.find((e: Experience) => e.id === id);
 
