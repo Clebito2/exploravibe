@@ -60,16 +60,22 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         };
 
         try {
-            const docRef = await addDoc(collection(db, "trips"), {
+            // Build trip data without undefined fields (Firestore doesn't accept undefined)
+            const tripData: any = {
                 name,
-                description: description || "", // Fix: Firestore hates undefined
+                description: description || "",
                 members: [newMember],
                 memberIds: [user.uid],
                 experienceIds: [],
                 status: "planning",
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
-            });
+            };
+
+            // Only add optional date fields if they exist
+            // startDate and endDate will be added later when user sets them
+
+            const docRef = await addDoc(collection(db, "trips"), tripData);
             return docRef.id;
         } catch (error) {
             console.error("Error creating trip:", error);

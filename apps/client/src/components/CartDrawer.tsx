@@ -2,6 +2,7 @@
 
 import { useCart } from "@/lib/CartContext";
 import { VERSION } from "@exploravibe/shared";
+import { useNavigate } from "react-router-dom";
 
 interface CartDrawerProps {
     isOpen: boolean;
@@ -10,6 +11,7 @@ interface CartDrawerProps {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const { items, removeFromCart, total } = useCart();
+    const navigate = useNavigate();
 
     if (!isOpen) return null;
 
@@ -37,7 +39,15 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                     </svg>
                                 </div>
                                 <p className="text-slate-500 font-medium">Seu carrinho está vazio.</p>
-                                <button onClick={onClose} className="text-[var(--ocean-start)] font-extrabold hover:underline uppercase tracking-widest text-xs">Começar a explorar</button>
+                                <button
+                                    onClick={() => {
+                                        onClose();
+                                        navigate("/");
+                                    }}
+                                    className="text-[var(--ocean-start)] font-extrabold hover:underline uppercase tracking-widest text-xs"
+                                >
+                                    Começar a explorar
+                                </button>
                             </div>
                         ) : (
                             items.map((item) => (

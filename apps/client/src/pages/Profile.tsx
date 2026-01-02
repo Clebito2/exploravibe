@@ -1,12 +1,14 @@
 import { useAuth } from "@/lib/AuthContext";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
+import { updateProfile } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import type { UserPreferences, UserConsent } from "@exploravibe/shared";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";
+import { uploadProfilePhoto } from "@/lib/uploadImage";
 
 const INTERESTS = ["Sertanejo", "Ecoturismo", "Família", "Religioso", "Gastronomia", "Aventura", "Cultura", "Lazer", "Vida Noturna"];
 const BUDGETS = ["baixo", "medio", "alto"];
@@ -138,8 +140,27 @@ export default function Profile() {
                                     className="hidden"
                                     onChange={async (e) => {
                                         const file = e.target.files?.[0];
-                                        if (file) {
-                                            alert("Funcionalidade de upload em desenvolvimento. Por enquanto, sua foto do Google será usada automaticamente.");
+                                        if (!file || !user) return;
+
+                                        try {
+                                            setSaving(true);
+                                            const photoURL = await uploadProfilePhoto(user.uid, file);
+
+                                            if (auth.currentUser) {
+                                                await updateProfile(auth.currentUser, { photoURL });
+                                            }
+
+                                            await setDoc(doc(db, "users", user.uid),
+                                                { photoURL },
+                                                { merge: true }
+                                            );
+
+                                            alert("✅ Foto atualizada com sucesso!");
+                                        } catch (error: any) {
+                                            console.error("Error:", error);
+                                            alert(`❌ ${error.message || "Erro ao fazer upload da foto"}`);
+                                        } finally {
+                                            setSaving(false);
                                         }
                                     }}
                                 />

@@ -15,6 +15,13 @@ export default function Login() {
     }, []);
 
     const [password, setPassword] = useState("");
+
+    // Persist email on change to prevent data loss
+    const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newEmail = e.target.value;
+        setEmail(newEmail);
+        localStorage.setItem("lastEmail", newEmail);
+    };
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -57,9 +64,30 @@ export default function Login() {
 
     return (
         <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-white relative overflow-hidden selection:bg-crystal selection:text-ocean text-ocean">
+            {/* Background Image */}
+            <div className="absolute inset-0 z-0">
+                <img
+                    src="/praia2.jpg"
+                    alt="Background"
+                    className="w-full h-full object-cover opacity-10"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white/90"></div>
+            </div>
+
+            {/* Back to Home Button */}
+            <button
+                onClick={() => navigate("/")}
+                className="absolute top-8 left-8 z-30 flex items-center gap-2 px-6 py-3 glass-morphism rounded-full text-ocean/60 hover:text-ocean transition-all hover:scale-105 active:scale-95 group"
+            >
+                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span className="text-xs font-black uppercase tracking-wider">Home</span>
+            </button>
+
             <FlashlightCursor />
 
-            <div className="w-full max-w-lg glass-morphism rounded-[3rem] shadow-2xl p-12 sm:p-20 space-y-12 animate-in fade-in zoom-in duration-700 border border-ocean/5 relative z-10 premium-card">
+            <div className="w-full max-w-lg glass-morphism rounded-[3rem] shadow-2xl p-12 sm:p-20 space-y-12 animate-in fade-in zoom-in duration-700 border border-ocean/5 relative z-20 premium-card">
                 <div className="text-center">
                     <h1 className="text-6xl font-secondary italic text-ocean tracking-tighter mb-6">ExploraVibe</h1>
                     <p className="text-ocean/40 font-primary font-bold text-sm uppercase tracking-[0.3em]">Portal de Experiências</p>
@@ -77,7 +105,7 @@ export default function Login() {
                         <input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={handleEmailChange}
                             className="w-full px-8 py-5 rounded-2xl border border-ocean/5 bg-crystal/10 focus:ring-4 focus:ring-ocean/5 outline-none transition font-primary font-bold text-sm text-ocean placeholder:text-ocean/20"
                             placeholder="exemplo@vibe.com"
                             required
