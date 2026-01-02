@@ -54,6 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                         photoURL: firebaseUser.photoURL || undefined,
                         role: "customer",
                         consent: { personalization: false, marketing: false, sensitiveData: false, location: false },
+                        preferences: { interests: [], budget: "medio", travelStyle: "cultural", accessibilityRequired: false },
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
                     });
@@ -71,6 +72,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                     photoURL: firebaseUser.photoURL || undefined,
                     role: "customer",
                     consent: { personalization: false, marketing: false, sensitiveData: false, location: false },
+                    preferences: { interests: [], budget: "medio", travelStyle: "cultural", accessibilityRequired: false },
                     createdAt: new Date().toISOString(),
                     updatedAt: new Date().toISOString(),
                 });

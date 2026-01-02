@@ -12,7 +12,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
         <div className="bg-white rounded-[2.5rem] overflow-hidden border border-slate-100 shadow-sm transition-all duration-500 premium-card group h-full flex flex-col">
             <div className="h-72 relative overflow-hidden">
                 <div className="absolute top-6 right-6 bg-coral/90 backdrop-blur-md px-5 py-2 rounded-full text-[10px] font-black text-white shadow-xl z-10 uppercase tracking-[0.2em] translate-y-0 group-hover:-translate-y-1 transition-transform">
-                    {experience.location.city}
+                    {experience.location?.city || "Explora"}
                 </div>
                 <img
                     src={experience.images[0]}
@@ -30,7 +30,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
                     </span>
                     <span className="w-1 h-1 rounded-full bg-slate-200"></span>
                     <span className="flex items-center gap-1.5 text-ocean text-[11px] font-black">
-                        <span className="text-amber-500">★</span> {experience.rating}
+                        <span className="text-amber-500">★</span> {experience.rating || "0.0"}
                     </span>
                 </div>
 

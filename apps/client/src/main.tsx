@@ -6,17 +6,20 @@ import './index.css'
 import { AuthProvider } from './lib/AuthContext'
 import { CartProvider } from './lib/CartContext'
 import { TripProvider } from './lib/TripContext'
+import ErrorBoundary from './components/ErrorBoundary'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <TripProvider>
-          <CartProvider>
-            <App />
-          </CartProvider>
-        </TripProvider>
-      </AuthProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <AuthProvider>
+          <TripProvider>
+            <CartProvider>
+              <App />
+            </CartProvider>
+          </TripProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   </React.StrictMode>,
 )

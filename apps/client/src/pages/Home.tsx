@@ -20,22 +20,30 @@ export default function Home() {
 
     // Invisible AI Logic: Sort by Interest Match
     const getMatchScore = (experience: Experience) => {
-        if (!user?.preferences || !user.consent?.personalization) return 0;
+        try {
+            if (!user?.preferences || !user.consent?.personalization) return 0;
 
-        let score = 0;
-        if (user.preferences.interests.includes(experience.category)) score += 50;
-        if (user.preferences.travelStyle === "aventureiro" && experience.category === "Aventura") score += 30;
-        if (user.preferences.travelStyle === "cultural" && experience.category === "Cultura") score += 30;
-        if (user.preferences.travelStyle === "festivo" && experience.category === "Lazer") score += 20;
+            let score = 0;
+            const interests = Array.isArray(user.preferences.interests) ? user.preferences.interests : [];
 
-        return score;
+            if (interests.includes(experience?.category)) score += 50;
+            if (user.preferences.travelStyle === "aventureiro" && experience?.category === "Aventura") score += 30;
+            if (user.preferences.travelStyle === "cultural" && experience?.category === "Cultura") score += 30;
+            if (user.preferences.travelStyle === "festivo" && experience?.category === "Lazer") score += 20;
+
+            return score;
+        } catch (e) {
+            console.error("Score calc error:", e);
+            return 0;
+        }
     };
 
-    const filteredExperiences = experiences
+    const filteredExperiences = (experiences || [])
         .filter((exp) => {
+            if (!exp) return false;
             if (selectedCategory === "Todos") return true;
             if (selectedCategory === "João Pessoa" || selectedCategory === "Goiânia") {
-                return exp.location.city === selectedCategory;
+                return exp.location?.city === selectedCategory;
             }
             return exp.category === selectedCategory;
         })
