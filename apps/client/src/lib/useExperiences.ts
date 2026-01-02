@@ -9,31 +9,40 @@ export const useExperiences = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const q = query(collection(db, "experiences"), orderBy("createdAt", "desc"));
+        try {
+            const q = query(collection(db, "experiences"), orderBy("createdAt", "desc"));
 
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const fetched = snapshot.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
-            } as Experience));
+            const unsubscribe = onSnapshot(q, (snapshot) => {
+                const fetched = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                } as Experience));
 
-            // Merge with mock data if needed, or replace entirely. 
-            // For production feel, let's keep mock data ONLY if DB is empty to show something, 
-            // OR just switch to full live data. Sticking to live data + logic to fallback is safer.
-            // But user wants admin created ones. 
+                // Merge with mock data if needed, or replace entirely. 
+                // For production feel, let's keep mock data ONLY if DB is empty to show something, 
+                // OR just switch to full live data. Sticking to live data + logic to fallback is safer.
+                // But user wants admin created ones. 
 
-            if (fetched.length === 0) {
-                setExperiences(MOCK_EXPERIENCES); // Fallback for demo
-            } else {
-                setExperiences(fetched);
-            }
+                if (fetched.length === 0) {
+                    setExperiences(MOCK_EXPERIENCES); // Fallback for demo
+                } else {
+                    setExperiences(fetched);
+                }
+                setLoading(false);
+            }, (error) => {
+                console.error("Error fetching experiences:", error);
+                // Fallback to mock data on error
+                setExperiences(MOCK_EXPERIENCES);
+                setLoading(false);
+            });
+
+            return () => unsubscribe();
+        } catch (error) {
+            console.error("Failed to initialize experiences query:", error);
+            // Safe fallback if query initialization fails
+            setExperiences(MOCK_EXPERIENCES);
             setLoading(false);
-        }, (error) => {
-            console.error("Error fetching experiences:", error);
-            setLoading(false);
-        });
-
-        return () => unsubscribe();
+        }
     }, []);
 
     return { experiences, loading };

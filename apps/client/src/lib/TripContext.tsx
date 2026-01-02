@@ -22,7 +22,8 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (!user) {
+        // Critical: Validate user.uid exists to prevent Firestore query errors
+        if (!user || !user.uid) {
             setTrips([]);
             setLoading(false);
             return;
