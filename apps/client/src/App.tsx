@@ -6,6 +6,7 @@ import Profile from './pages/Profile'
 import ExperienceDetails from './pages/ExperienceDetails'
 import Reviews from './pages/Reviews'
 import TripList from './pages/TripList'
+import TripDetails from './pages/TripDetails'
 import AdminLayout from './pages/admin/AdminLayout'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminExperiences from './pages/admin/Experiences'
@@ -19,6 +20,7 @@ function App() {
       <Route path="/cadastro" element={<SignUp />} />
       <Route path="/perfil" element={<Profile />} />
       <Route path="/viagens" element={<TripList />} />
+      <Route path="/viagens/:id" element={<TripDetails />} />
       <Route path="/experiencia/:id" element={<ExperienceDetails />} />
       <Route path="/experiencia/:id/avaliacoes" element={<Reviews />} />
 

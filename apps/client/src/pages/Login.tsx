@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useNavigate, Link } from "react-router-dom";
@@ -8,6 +8,12 @@ import FlashlightCursor from "@/components/FlashlightCursor";
 
 export default function Login() {
     const [email, setEmail] = useState("");
+
+    useEffect(() => {
+        const savedEmail = localStorage.getItem("lastEmail");
+        if (savedEmail) setEmail(savedEmail);
+    }, []);
+
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);

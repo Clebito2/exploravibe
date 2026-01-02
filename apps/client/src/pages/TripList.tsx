@@ -10,7 +10,7 @@ import Skeleton from "@/components/Skeleton";
 
 export default function TripList() {
     const { user, loading: authLoading } = useAuth();
-    const { trips, createTrip, loading: tripsLoading } = useTrips();
+    const { trips, createTrip, addMember, loading: tripsLoading } = useTrips();
     const [newTripName, setNewTripName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const navigate = useNavigate();
@@ -121,13 +121,19 @@ export default function TripList() {
                                 <div className="flex justify-between items-start mb-10">
                                     <div className="flex -space-x-4">
                                         {trip.members.map((member, i) => (
-                                            <div key={i} className="w-14 h-14 rounded-2xl bg-ocean text-white border-4 border-white flex items-center justify-center text-xs font-black shadow-lg">
-                                                {member.userId === user?.uid ? "VC" : i + 1}
+                                            <div key={i} className="w-14 h-14 rounded-2xl bg-ocean text-white border-4 border-white flex items-center justify-center text-xs font-black shadow-lg uppercase">
+                                                {member.userId === user?.uid ? user?.displayName?.charAt(0) || "VC" : "M" + (i + 1)}
                                             </div>
                                         ))}
-                                        <div className="w-14 h-14 rounded-2xl bg-crystal border-4 border-white flex items-center justify-center text-2xl text-ocean font-bold shadow-sm cursor-pointer hover:bg-ocean hover:text-white transition">
+                                        <button
+                                            onClick={() => {
+                                                const email = prompt("Digite o email do amigo para convidar:");
+                                                if (email) addMember(trip.id, email);
+                                            }}
+                                            className="w-14 h-14 rounded-2xl bg-crystal border-4 border-white flex items-center justify-center text-2xl text-ocean font-bold shadow-sm cursor-pointer hover:bg-ocean hover:text-white transition"
+                                        >
                                             +
-                                        </div>
+                                        </button>
                                     </div>
                                     <span className={`px-5 py-2 rounded-full text-[9px] font-black uppercase tracking-[0.2em] shadow-sm ${trip.status === "planning" ? "bg-coral text-white" : "bg-ocean text-white"
                                         }`}>
@@ -163,18 +169,6 @@ export default function TripList() {
                                 </div>
 
                                 <div className="flex items-center justify-between pt-8 border-t border-ocean/10">
-                                    <div className="flex flex-col">
-                                        <span className="text-[9px] font-black text-ocean/20 uppercase tracking-widest mb-1">Iniciado em</span>
-                                        <span className="text-xs font-black text-ocean/60">
-                                            {new Date(trip.createdAt).toLocaleDateString()}
-                                        </span>
-                                    </div>
-                                    <button className="flex items-center gap-4 bg-ocean text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-ocean/10 hover:bg-coral transition-all active:scale-95 group/btn">
-                                        Explorar
-                                        <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                        </svg>
-                                    </button>
                                 </div>
                             </BentoCard>
                         ))}

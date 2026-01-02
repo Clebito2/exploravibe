@@ -3,13 +3,14 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type { Trip, TripMember } from "@exploravibe/shared";
 import { db } from "./firebase";
-import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion, where } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion, where, getDocs } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 
 interface TripContextType {
     trips: Trip[];
     createTrip: (name: string, description?: string) => Promise<string>;
     addToTrip: (tripId: string, experienceId: string) => Promise<void>;
+    addMember: (tripId: string, email: string) => Promise<void>;
     loading: boolean;
 }
 
@@ -83,8 +84,42 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         });
     };
 
+    const addMember = async (tripId: string, email: string) => {
+        try {
+            const usersRef = collection(db, "users");
+            const q = query(usersRef, where("email", "==", email));
+            const querySnapshot = await getDocs(q);
+
+            if (querySnapshot.empty) {
+                alert("Usuário não encontrado com este email.");
+                return;
+            }
+
+            const userDoc = querySnapshot.docs[0];
+            const newUserId = userDoc.id;
+
+            const tripRef = doc(db, "trips", tripId);
+            const newMember: TripMember = {
+                userId: newUserId,
+                role: "editor",
+                joinedAt: new Date().toISOString()
+            };
+
+            await updateDoc(tripRef, {
+                members: arrayUnion(newMember),
+                memberIds: arrayUnion(newUserId),
+                updatedAt: new Date().toISOString()
+            });
+            alert(`Usuário ${email} adicionado com sucesso!`);
+        } catch (error) {
+            console.error("Error adding member:", error);
+            alert("Erro ao adicionar membro.");
+            throw error;
+        }
+    };
+
     return (
-        <TripContext.Provider value={{ trips, createTrip, addToTrip, loading }}>
+        <TripContext.Provider value={{ trips, createTrip, addToTrip, addMember, loading }}>
             {children}
         </TripContext.Provider>
     );

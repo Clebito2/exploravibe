@@ -1,5 +1,5 @@
 import { useAuth } from "@/lib/AuthContext";
-import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
+import { useNavigate, Outlet, Link, useLocation, Navigate } from "react-router-dom";
 import Header from "@/components/Header";
 
 // For dev/demo purposes, we might want to log the user email to debug
@@ -57,8 +57,7 @@ export default function AdminLayout() {
     }
 
     if (!user) {
-        // Redirect logic handled by useEffect, but render null to avoid flash
-        return null;
+        return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
     }
 
     return (
