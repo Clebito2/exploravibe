@@ -38,7 +38,16 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
             where("memberIds", "array-contains", user.uid)
         );
 
+        console.log("🔵 QUERYING TRIPS - user.uid:", user.uid);
+        
         const unsubscribe = onSnapshot(q, (snapshot) => {
+            console.log("📦 TRIPS SNAPSHOT RECEIVED:");
+            console.log("  - Size:", snapshot.size);
+            console.log("  - Empty:", snapshot.empty);
+            snapshot.docs.forEach((doc, index) => {
+                console.log(`  [${index}] Trip ID:`, doc.id);
+                console.log(`  [${index}] Data:`, doc.data());
+            });
             const userTrips = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Trip));
             setTrips(userTrips);
             setLoading(false);
