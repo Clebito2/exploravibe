@@ -89,7 +89,7 @@ export default function Home() {
                         {user && (
                             <div className="flex items-center gap-4 p-4 bg-white/40 rounded-3xl border border-white/60">
                                 <div className="w-12 h-12 rounded-2xl bg-ocean flex items-center justify-center text-white font-black">
-                                    {user.displayName.charAt(0)}
+                                    {user.displayName?.charAt(0) || "U"}
                                 </div>
                                 <div>
                                     <p className="text-xs font-black uppercase tracking-widest text-ocean">Membro Elite</p>

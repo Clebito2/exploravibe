@@ -36,8 +36,9 @@ export default function SignUp() {
 
             // Check for redirect param
             const params = new URLSearchParams(window.location.search);
-            const redirect = params.get("redirect") || "/perfil";
+            const redirect = params.get("redirect") || "/";
             navigate(redirect);
+            window.location.reload();
         } catch (err: any) {
             console.error("SignUp Error:", err.code);
             setError(mapAuthError(err.code));
@@ -63,8 +64,9 @@ export default function SignUp() {
             }, { merge: true });
 
             const params = new URLSearchParams(window.location.search);
-            const redirect = params.get("redirect") || "/perfil";
+            const redirect = params.get("redirect") || "/";
             navigate(redirect);
+            window.location.reload();
         } catch (err: any) {
             console.error("Google SignUp Error:", err.code);
             setError(mapAuthError(err.code));

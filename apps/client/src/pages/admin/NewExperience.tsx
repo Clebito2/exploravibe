@@ -1,7 +1,8 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "@/lib/firebase";
 
 const CATEGORIES = ["Gastronomia", "Cultura", "Aventura", "Lazer"] as const;
 const INTERESTS = ["Sertanejo", "Ecoturismo", "Família", "Religioso", "Gastronomia", "Aventura", "Cultura", "Lazer", "Vida Noturna"];
@@ -14,6 +15,7 @@ const CITIES = [
 export default function NewExperience() {
     const navigate = useNavigate();
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     // Form state
     const [title, setTitle] = useState("");
@@ -27,6 +29,24 @@ export default function NewExperience() {
     const [imageUrl, setImageUrl] = useState("");
     const [targetInterests, setTargetInterests] = useState<string[]>([]);
     const [targetStyles, setTargetStyles] = useState<string[]>([]);
+
+    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setUploading(true);
+        try {
+            const storageRef = ref(storage, `experiences/${Date.now()}_${file.name}`);
+            const snapshot = await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(snapshot.ref);
+            setImageUrl(url);
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert("Erro ao fazer upload da imagem.");
+        } finally {
+            setUploading(false);
+        }
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -199,15 +219,31 @@ export default function NewExperience() {
                             />
                         </div>
                         <div className="space-y-3">
-                            <label className="block text-[10px] font-black text-ocean/40 uppercase tracking-widest">URL da Imagem</label>
-                            <input
-                                type="url"
-                                value={imageUrl}
-                                onChange={(e) => setImageUrl(e.target.value)}
-                                className="w-full px-6 py-4 rounded-xl bg-white border border-ocean/10 font-primary font-bold text-ocean placeholder:text-ocean/20 outline-none focus:ring-4 focus:ring-ocean/5"
-                                placeholder="https://..."
-                                required
-                            />
+                            <label className="block text-[10px] font-black text-ocean/40 uppercase tracking-widest">Mídia da Experiência</label>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex gap-4">
+                                    <div className="flex-grow">
+                                        <input
+                                            type="url"
+                                            value={imageUrl}
+                                            onChange={(e) => setImageUrl(e.target.value)}
+                                            className="w-full px-6 py-4 rounded-xl bg-white border border-ocean/10 font-primary font-bold text-ocean placeholder:text-ocean/20 outline-none focus:ring-4 focus:ring-ocean/5"
+                                            placeholder="URL da imagem ou faça upload ao lado →"
+                                            required
+                                        />
+                                    </div>
+                                    <label className={`px-8 py-4 rounded-xl bg-ocean text-white font-black text-[10px] uppercase tracking-widest cursor-pointer hover:bg-coral transition-all flex items-center gap-2 ${uploading ? "opacity-50 cursor-not-allowed" : ""}`}>
+                                        {uploading ? "Subindo..." : "Upload 🚀"}
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            className="hidden"
+                                            onChange={handleImageUpload}
+                                            disabled={uploading}
+                                        />
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     {imageUrl && (

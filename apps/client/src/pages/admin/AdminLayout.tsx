@@ -1,6 +1,8 @@
 import { useAuth } from "@/lib/AuthContext";
 import { useNavigate, Outlet, Link, useLocation, Navigate } from "react-router-dom";
 import Header from "@/components/Header";
+import { signOut } from "firebase/auth";
+import { auth } from "@/lib/firebase";
 
 // For dev/demo purposes, we might want to log the user email to debug
 const ADMIN_EMAILS = ["cleber.ihs@gmail.com", "admin@exploravibe.com"];
@@ -46,7 +48,10 @@ export default function AdminLayout() {
                         Voltar ao Início
                     </button>
                     <button
-                        onClick={() => navigate("/login?redirect=/admin")}
+                        onClick={async () => {
+                            await signOut(auth); // Sign out first to allow choosing another account
+                            navigate("/login?redirect=/admin");
+                        }}
                         className="px-6 py-3 bg-white border border-ocean text-ocean rounded-xl font-bold"
                     >
                         Trocar Conta
@@ -57,6 +62,7 @@ export default function AdminLayout() {
     }
 
     if (!user) {
+        // Only redirect to login if we are actually at /admin (to avoid loops)
         return <Navigate to={`/login?redirect=${encodeURIComponent(location.pathname)}`} replace />;
     }
 
