@@ -13,6 +13,7 @@ import FlashlightCursor from "@/components/FlashlightCursor";
 import ExperienceCard from "@/components/ExperienceCard";
 import FilterBar from "@/components/FilterBar";
 import Skeleton from "@/components/Skeleton";
+import Footer from "@/components/Footer";
 
 const CATEGORIES = ["Todos", "João Pessoa", "Goiânia", "Gastronomia", "Cultura", "Aventura", "Lazer"];
 
@@ -185,6 +186,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <Footer />
     </main>
   );
 }
