@@ -50,12 +50,18 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         return () => unsubscribe();
     }, [user]);
 
-    const createTrip = async (name: string, description?: string) => {
+        const createTrip = async (name: string, description?: string) => {
         if (!user) throw new Error("Must be logged in");
 
         try {
+            console.log("🔵 CREATE TRIP - USER:", {
+                uid: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL
+            });
+
             // Build trip data WITHOUT any undefined fields
-            // Construct members inline to avoid undefined from intermediate variables
             const tripData = {
                 name,
                 description: description || "",
@@ -71,10 +77,30 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
                 updatedAt: new Date().toISOString()
             };
 
+            console.log("🟢 TRIP DATA (BEFORE addDoc):", JSON.stringify(tripData, null, 2));
+            console.log("🔍 CHECKING FOR UNDEFINED:");
+            Object.entries(tripData).forEach(([key, value]) => {
+                if (value === undefined) {
+                    console.error(`❌ FIELD "${key}" IS UNDEFINED!`);
+                }
+                if (Array.isArray(value)) {
+                    value.forEach((item, index) => {
+                        if (typeof item === 'object') {
+                            Object.entries(item).forEach(([subKey, subValue]) => {
+                                if (subValue === undefined) {
+                                    console.error(`❌ FIELD "${key}[${index}].${subKey}" IS UNDEFINED!`);
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
             const docRef = await addDoc(collection(db, "trips"), tripData);
+            console.log("✅ TRIP CREATED SUCCESSFULLY:", docRef.id);
             return docRef.id;
         } catch (error) {
-            console.error("Error creating trip:", error);
+            console.error("❌ CREATE TRIP ERROR:", error);
             throw error;
         }
     };
