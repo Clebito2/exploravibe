@@ -3,7 +3,9 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import Header from "@/components/Header";
 
-const ADMIN_EMAIL = "cleber.ihs@gmail.com";
+// For dev/demo purposes, we might want to log the user email to debug
+const ADMIN_EMAILS = ["cleber.ihs@gmail.com", "admin@exploravibe.com"];
+
 
 const SIDEBAR_ITEMS = [
     { name: "Dashboard", href: "/admin", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
@@ -15,7 +17,8 @@ export default function AdminLayout() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isAdmin = user?.email === ADMIN_EMAIL;
+    const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
+    console.log("Admin Check:", user?.email, isAdmin); // Debug log
 
     useEffect(() => {
         if (!loading && !user) {

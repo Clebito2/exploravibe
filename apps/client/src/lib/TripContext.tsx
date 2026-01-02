@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type { Trip, TripMember } from "@exploravibe/shared";
 import { db } from "./firebase";
-import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion, where } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 
 interface TripContextType {
@@ -31,13 +31,17 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         // Note: This requires a specific structure or multiple queries, 
         // but for MVP we search by owner or use a flattened member UIDs list.
         // For now, let's assume we filter client-side or use a simpler owner check.
-        const q = query(collection(db, "trips"));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const userTrips = snapshot.docs
-                .map(doc => ({ id: doc.id, ...doc.data() } as Trip))
-                .filter(trip => trip.members.some(m => m.userId === user.uid));
+        const q = query(
+            collection(db, "trips"),
+            where("memberIds", "array-contains", user.uid)
+        );
 
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const userTrips = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Trip));
             setTrips(userTrips);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching trips:", error);
             setLoading(false);
         });
 
@@ -53,17 +57,22 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
             joinedAt: new Date().toISOString()
         };
 
-        const docRef = await addDoc(collection(db, "trips"), {
-            name,
-            description,
-            members: [newMember],
-            experienceIds: [],
-            status: "planning",
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-        });
-
-        return docRef.id;
+        try {
+            const docRef = await addDoc(collection(db, "trips"), {
+                name,
+                description,
+                members: [newMember],
+                memberIds: [user.uid], // Optimized for querying
+                experienceIds: [],
+                status: "planning",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            });
+            return docRef.id;
+        } catch (error) {
+            console.error("Error creating trip:", error);
+            throw error;
+        }
     };
 
     const addToTrip = async (tripId: string, experienceId: string) => {
