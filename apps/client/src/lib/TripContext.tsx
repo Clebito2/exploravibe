@@ -53,27 +53,23 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
     const createTrip = async (name: string, description?: string) => {
         if (!user) throw new Error("Must be logged in");
 
-        const newMember: TripMember = {
-            userId: user.uid,
-            role: "owner",
-            joinedAt: new Date().toISOString()
-        };
-
         try {
-            // Build trip data without undefined fields (Firestore doesn't accept undefined)
-            const tripData: any = {
+            // Build trip data WITHOUT any undefined fields
+            // Construct members inline to avoid undefined from intermediate variables
+            const tripData = {
                 name,
                 description: description || "",
-                members: [newMember],
+                members: [{
+                    userId: user.uid,
+                    role: "owner" as const,
+                    joinedAt: new Date().toISOString()
+                }],
                 memberIds: [user.uid],
                 experienceIds: [],
-                status: "planning",
+                status: "planning" as const,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
             };
-
-            // Only add optional date fields if they exist
-            // startDate and endDate will be added later when user sets them
 
             const docRef = await addDoc(collection(db, "trips"), tripData);
             return docRef.id;
