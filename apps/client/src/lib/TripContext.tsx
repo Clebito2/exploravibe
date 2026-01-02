@@ -60,9 +60,9 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         try {
             const docRef = await addDoc(collection(db, "trips"), {
                 name,
-                description,
+                description: description || "", // Fix: Firestore hates undefined
                 members: [newMember],
-                memberIds: [user.uid], // Optimized for querying
+                memberIds: [user.uid],
                 experienceIds: [],
                 status: "planning",
                 createdAt: new Date().toISOString(),

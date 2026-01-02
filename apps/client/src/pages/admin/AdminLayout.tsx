@@ -22,7 +22,7 @@ export default function AdminLayout() {
 
     useEffect(() => {
         if (!loading && !user) {
-            navigate("/login");
+            navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
         }
         if (!loading && user && !isAdmin) {
             alert("Acesso negado. Você não tem permissão de administrador.");
