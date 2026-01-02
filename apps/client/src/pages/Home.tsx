@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 import { CATEGORIES } from "@/lib/constants";
 
 export default function Home() {
-    const { experiences, loading } = useExperiences();
+    const { experiences } = useExperiences();
     const { user } = useAuth();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState("Todos");
