@@ -1,0 +1,69 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    function isTripMember(tripId) {
+      return isSignedIn() && (
+        get(/databases/$(database)/documents/trips/$(tripId)).data.members.hasAny([{
+          'userId': request.auth.uid,
+          'role': 'owner'
+        }, {
+          'userId': request.auth.uid,
+          'role': 'editor'
+        }, {
+          'userId': request.auth.uid,
+          'role': 'viewer'
+        }])
+      );
+    }
+
+    // --- USERS ---
+    match /users/{userId} {
+      allow read: if isSignedIn() && (isOwner(userId) || isAdmin());
+      allow create: if isSignedIn();
+      allow update: if isOwner(userId);
+      allow delete: if isAdmin();
+    }
+
+    // --- TRIPS ---
+    match /trips/{tripId} {
+      allow read: if isTripMember(tripId) || isAdmin();
+      allow create: if isSignedIn();
+      allow update: if (isTripMember(tripId) && get(/databases/$(database)/documents/trips/$(tripId)).data.members.filter(m => m.userId == request.auth.uid)[0].role != 'viewer') || isAdmin();
+      allow delete: if (isTripMember(tripId) && get(/databases/$(database)/documents/trips/$(tripId)).data.members.filter(m => m.userId == request.auth.uid)[0].role == 'owner') || isAdmin();
+    }
+
+    // --- EXPERIENCES & DESTINATIONS ---
+    match /destinations/{destId} { allow read: if true; allow write: if isAdmin(); }
+    match /experiences/{expId} { allow read: if true; allow write: if isAdmin(); }
+
+    // --- BOOKINGS ---
+    match /bookings/{bookingId} {
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin() || (isOwner(resource.data.userId) && request.resource.data.status == 'cancelled');
+    }
+
+    // --- REVIEWS ---
+    match /reviews/{reviewId} {
+      allow read: if true; // Reviews are public
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+    }
+  }
+}
