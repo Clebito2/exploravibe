@@ -29,11 +29,14 @@ export default function TripList() {
         if (!newTripName) return;
         setIsCreating(true);
         try {
-            await createTrip(newTripName);
+            const tripId = await createTrip(newTripName);
+            alert(`✅ Roteiro "${newTripName}" criado com sucesso! ID: ${tripId}`);
             setNewTripName("");
+            // Force reload to show new trip
+            window.location.reload();
         } catch (e: any) {
-            console.error(e);
-            alert(`Erro ao criar roteiro: ${e.message || e.code || "Erro desconhecido"}`);
+            console.error("Create trip error:", e);
+            alert(`❌ Erro ao criar roteiro: ${e.message || e.code || "Erro desconhecido"}`);
         } finally {
             setIsCreating(false);
         }
