@@ -10,6 +10,25 @@ import { Experience } from "@exploravibe/shared";
 import { MOCK_EXPERIENCES } from "@/lib/mockData";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";
+import { Metadata } from "next";
+
+export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+    const id = params.id;
+    const experience = MOCK_EXPERIENCES.find((e) => e.id === id);
+
+    if (!experience) {
+        return {
+            title: "Experiência não encontrada | ExploraVibe",
+        };
+    }
+
+    return {
+        title: `${experience.title} | ExploraVibe`,
+        description: experience.description,
+    };
+}
 
 export default function ExperienceDetails() {
     const { id } = useParams();
