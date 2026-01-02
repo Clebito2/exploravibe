@@ -138,8 +138,14 @@ export default function LoginPage() {
                     </Link>
                 </p>
 
-                <div className="text-center pt-8 border-t border-ocean/5">
-                    <span className="text-[9px] font-black text-ocean/15 uppercase tracking-[0.4em]">ExploraVibe Platform v{VERSION}</span>
+                <div className="text-center pt-8 border-t border-ocean/5 space-y-4">
+                    <Link
+                        href="/admin"
+                        className="text-[9px] font-black text-ocean/10 uppercase tracking-[0.4em] hover:text-ocean/30 transition-colors"
+                    >
+                        🔐 Área Restrita
+                    </Link>
+                    <span className="block text-[9px] font-black text-ocean/15 uppercase tracking-[0.4em]">ExploraVibe Platform v{VERSION}</span>
                 </div>
             </div>
         </div>
