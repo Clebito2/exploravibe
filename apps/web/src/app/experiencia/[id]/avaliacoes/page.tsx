@@ -10,6 +10,7 @@ import { MOCK_EXPERIENCES } from "@/lib/mockData";
 import Header from "@/components/Header";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";
+import { TRAVELER_TYPES } from "@/lib/constants";
 
 // Mock reviews for demonstration
 const MOCK_REVIEWS: Review[] = [
@@ -53,14 +54,6 @@ const MOCK_REVIEWS: Review[] = [
         createdAt: "2025-12-01T09:00:00Z"
     }
 ];
-
-const TRAVELER_TYPES = {
-    solo: "Viajante Solo",
-    casal: "Casal",
-    familia: "Família",
-    amigos: "Grupo de Amigos",
-    negocios: "Viagem de Negócios"
-};
 
 function StarRating({ rating, size = "md" }: { rating: number; size?: "sm" | "md" | "lg" }) {
     const sizes = { sm: "w-4 h-4", md: "w-5 h-5", lg: "w-7 h-7" };
