@@ -39,7 +39,7 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         );
 
         console.log("🔵 QUERYING TRIPS - user.uid:", user.uid);
-        
+
         const unsubscribe = onSnapshot(q, (snapshot) => {
             console.log("📦 TRIPS SNAPSHOT RECEIVED:");
             console.log("  - Size:", snapshot.size);
@@ -59,31 +59,38 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         return () => unsubscribe();
     }, [user]);
 
-                const createTrip = async (name: string, description?: string) => {
+    const createTrip = async (name: string, description?: string) => {
         if (!user) throw new Error("Must be logged in");
 
+        // CRITICAL: Validate user.uid exists
+        if (!user.uid) {
+            console.error("❌ CANNOT CREATE TRIP: user.uid is undefined!", user);
+            throw new Error("Erro: ID do usuário não disponível. Tente fazer logout e login novamente.");
+        }
+
         try {
-            console.log("🚀 CREATE TRIP START:", { name, uid: user.uid });
-            
+            console.log("🚀 CREATE TRIP - user.uid:", user.uid);
+
+            const userUid = user.uid; // Capture to ensure it's defined
+
             // ULTRA SIMPLIFIED - NO OPTIONAL FIELDS AT ALL
             const docRef = await addDoc(collection(db, "trips"), {
                 name: String(name),
                 description: String(description || ""),
                 members: [{
-                    userId: String(user.uid),
+                    userId: userUid,
                     role: "owner",
-                    joinedAt: String(new Date().toISOString())
+                    joinedAt: new Date().toISOString()
                 }],
-                memberIds: [String(user.uid)],
-                
+                memberIds: [userUid],
                 experienceIds: [],
                 status: "planning",
-                createdAt: String(new Date().toISOString()),
-                updatedAt: String(new Date().toISOString())
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
             });
-            
+
             console.log("✅ addDoc RETURNED ID:", docRef.id);
-            
+
             // VERIFY document was actually created
             const verifyDoc = await getDoc(docRef);
             if (verifyDoc.exists()) {
@@ -91,7 +98,7 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
             } else {
                 console.error("❌ DOCUMENT NOT FOUND AFTER CREATE!");
             }
-            
+
             return docRef.id;
         } catch (error) {
             console.error("❌ CREATE TRIP ERROR:", error);
