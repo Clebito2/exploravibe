@@ -50,10 +50,12 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         return () => unsubscribe();
     }, [user]);
 
-            const createTrip = async (name: string, description?: string) => {
+                const createTrip = async (name: string, description?: string) => {
         if (!user) throw new Error("Must be logged in");
 
         try {
+            console.log("🚀 CREATE TRIP START:", { name, uid: user.uid });
+            
             // ULTRA SIMPLIFIED - NO OPTIONAL FIELDS AT ALL
             const docRef = await addDoc(collection(db, "trips"), {
                 name: String(name),
@@ -70,9 +72,19 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
                 updatedAt: String(new Date().toISOString())
             });
             
+            console.log("✅ addDoc RETURNED ID:", docRef.id);
+            
+            // VERIFY document was actually created
+            const verifyDoc = await getDoc(docRef);
+            if (verifyDoc.exists()) {
+                console.log("✅ DOCUMENT EXISTS IN FIRESTORE:", verifyDoc.data());
+            } else {
+                console.error("❌ DOCUMENT NOT FOUND AFTER CREATE!");
+            }
+            
             return docRef.id;
         } catch (error) {
-            console.error("Error creating trip:", error);
+            console.error("❌ CREATE TRIP ERROR:", error);
             throw error;
         }
     };
