@@ -17,18 +17,7 @@ export default function AdminLayout() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email);
-    console.log("Admin Check:", user?.email, isAdmin); // Debug log
-
-    useEffect(() => {
-        if (!loading && !user) {
-            navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
-        }
-        if (!loading && user && !isAdmin) {
-            alert("Acesso negado. Você não tem permissão de administrador.");
-            navigate("/");
-        }
-    }, [user, loading, isAdmin, navigate]);
+    const isAdmin = user?.email && ADMIN_EMAILS.includes(user.email.toLowerCase());
 
     if (loading) {
         return (
@@ -38,7 +27,40 @@ export default function AdminLayout() {
         );
     }
 
-    if (!isAdmin) return null;
+    if (user && !isAdmin) {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 p-6 text-center">
+                <h1 className="text-3xl font-black text-red-600 mb-4">ACESSO NEGADO 🚫</h1>
+                <p className="text-ocean font-bold mb-2">Você está logado como:</p>
+                <code className="bg-white px-4 py-2 rounded border border-red-200 text-lg mb-6 block">
+                    {user.email}
+                </code>
+                <p className="text-sm text-gray-500 mb-8 max-w-md">
+                    Este email não está na lista de administradores.<br />
+                    Emails permitidos: {ADMIN_EMAILS.join(", ")}
+                </p>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => navigate("/")}
+                        className="px-6 py-3 bg-ocean text-white rounded-xl font-bold"
+                    >
+                        Voltar ao Início
+                    </button>
+                    <button
+                        onClick={() => navigate("/login?redirect=/admin")}
+                        className="px-6 py-3 bg-white border border-ocean text-ocean rounded-xl font-bold"
+                    >
+                        Trocar Conta
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user) {
+        // Redirect logic handled by useEffect, but render null to avoid flash
+        return null;
+    }
 
     return (
         <main className="min-h-screen bg-white">
