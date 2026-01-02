@@ -1,6 +1,5 @@
 import { useAuth } from "@/lib/AuthContext";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useNavigate, Outlet, Link, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 
 // For dev/demo purposes, we might want to log the user email to debug

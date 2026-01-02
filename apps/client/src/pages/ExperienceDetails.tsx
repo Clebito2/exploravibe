@@ -5,24 +5,25 @@ import { useAuth } from "@/lib/AuthContext";
 import { useState } from "react";
 import Header from "@/components/Header";
 import type { Experience } from "@exploravibe/shared";
-import { MOCK_EXPERIENCES } from "@/lib/mockData";
+import { useExperiences } from "@/lib/useExperiences";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";
 
 export default function ExperienceDetails() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { user, loading } = useAuth();
+    const { user, loading: authLoading } = useAuth();
     const { addToCart } = useCart();
     const { trips, addToTrip } = useTrips();
+    const { experiences, loading: expLoading } = useExperiences();
     const [date, setDate] = useState("");
     const [travelers, setTravelers] = useState(1);
     const [selectedTripId, setSelectedTripId] = useState("");
     const [addingToTrip, setAddingToTrip] = useState(false);
 
-    const experience = MOCK_EXPERIENCES.find((e: Experience) => e.id === id);
+    const experience = experiences.find((e: Experience) => e.id === id);
 
-    if (loading) {
+    if (authLoading || expLoading) {
         return (
             <main className="min-h-screen bg-white overflow-hidden">
                 <Header />
