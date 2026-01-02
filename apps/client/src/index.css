@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f9fa;
+  --foreground: #121212;
+
+  /* Aesthetic Monad Palette 60/30/10 */
+  --ocean-deep: #004b63;
+  /* Primary 60% */
+  --cyan-crystal: #e0f7fa;
+  /* Secondary 30% */
+  --coral-accent: #ff6f00;
+  /* Accent 10% */
+
+  /* Functional Colors */
+  --energy-orange: var(--coral-accent);
+  --energy-neon: #ffab40;
+
+  /* Spacing & Effects */
+  --space-lg: 3rem;
+  --glass-blur: 20px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-primary: var(--font-inter), ui-sans-serif, system-ui;
+  --font-secondary: var(--font-libre), serif;
+
+  /* Custom colors */
+  --color-ocean: var(--ocean-deep);
+  --color-crystal: var(--cyan-crystal);
+  --color-coral: var(--coral-accent);
+  --color-energy: var(--coral-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #121212;
+    --foreground: #f8f9fa;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary);
+}
+
+/* Premium UI Utilities 2026 */
+.bg-ocean-gradient {
+  background: linear-gradient(135deg, var(--ocean-deep) 0%, #007c91 100%);
+}
+
+.bg-energy-gradient {
+  background: linear-gradient(135deg, var(--coral-accent) 0%, #ff9e40 100%);
+}
+
+.glass-morphism {
+  background: rgba(224, 247, 250, 0.4);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.dark .glass-morphism {
+  background: rgba(18, 18, 18, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.premium-card {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.05), -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.premium-card:hover {
+  transform: translateY(-5px) scale(1.01);
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.08), -12px -12px 24px rgba(255, 255, 255, 1);
+}
+
+.flashlight-area {
+  position: relative;
+  overflow: hidden;
+}
+
+.flashlight-glow {
+  pointer-events: none;
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(224, 247, 250, 0.15) 0%, transparent 70%);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  transition: opacity 0.3s ease;
+}
+
+.kinetic-scroll {
+  display: inline-block;
+  transition: transform 0.1s linear, font-weight 0.4s ease;
+}
