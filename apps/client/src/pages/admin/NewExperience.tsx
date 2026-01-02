@@ -30,19 +30,32 @@ export default function NewExperience() {
     const [targetInterests, setTargetInterests] = useState<string[]>([]);
     const [targetStyles, setTargetStyles] = useState<string[]>([]);
 
-    const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('❌ O arquivo deve ser uma imagem');
+            return;
+        }
+
+        // Validate file size (max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('❌ A imagem deve ter no máximo 5MB');
+            return;
+        }
 
         setUploading(true);
         try {
             const storageRef = ref(storage, `experiences/${Date.now()}_${file.name}`);
-            const snapshot = await uploadBytes(storageRef, file);
-            const url = await getDownloadURL(snapshot.ref);
+            await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(storageRef);
             setImageUrl(url);
-        } catch (error) {
-            console.error("Upload error:", error);
-            alert("Erro ao fazer upload da imagem.");
+            alert('✅ Upload concluído com sucesso!');
+        } catch (error: any) {
+            console.error('Upload error:', error);
+            alert(`❌ Erro ao fazer upload: ${error.message || 'Falha desconhecida'}`);
         } finally {
             setUploading(false);
         }

@@ -51,6 +51,18 @@ export default function Home() {
 
     return (
         <main className="min-h-screen bg-white selection:bg-crystal selection:text-ocean overflow-x-hidden">
+            {/* Background Image */}
+            <div className="fixed inset-0 z-0">
+                <img 
+                    src="/restderua.jpg" 
+                    alt="Background" 
+                    className="w-full h-full object-cover opacity-20"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/70 to-white/90"></div>
+            </div>
+
+            {/* Content with higher z-index */}
+            <div className="relative z-10">
             <FlashlightCursor />
             <Header />
 
@@ -166,6 +178,7 @@ export default function Home() {
             </section>
 
             <Footer />
+            </div>
         </main>
     );
 }

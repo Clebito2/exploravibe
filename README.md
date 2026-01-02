@@ -42,5 +42,41 @@ npm install
 npm run dev
 ```
 
+
+## 📋 Development Guidelines
+
+### Formatação de Arquivos
+**Problema:** O sistema usa `\r\n` (Windows) causando falhas em edições.
+
+**Solução:**
+- Editar via scripts Node.js com `fs.readFileSync/writeFileSync`
+- Incluir `\r\n` exato no pattern matching
+- Usar regex quando possível
+
+### Análise de Impacto (OBRIGATÓRIO)
+
+Antes de implementar QUALQUER mudança, analisar:
+
+1. **Segurança:** Exposição de dados? Validações? Regras Firestore?
+2. **UX:** Melhora experiência? Feedback visual? Loading states?
+3. **Performance:** Impacto em queries? Otimização de assets?
+
+### Padrões de Código
+
+#### Firestore: NUNCA enviar `undefined`
+```typescript
+// ❌ ERRADO
+const data = { field: optionalValue };
+
+// ✅ CORRETO
+const data = { field: optionalValue || "" };
+```
+
+#### Firebase Storage: Paths
+```
+profiles/{userId}/{timestamp}_{filename}
+experiences/{timestamp}_{filename}
+```
+
 ---
 *ExploraVibe: Sinta a energia, viva a experiência.* 🌊⚡
