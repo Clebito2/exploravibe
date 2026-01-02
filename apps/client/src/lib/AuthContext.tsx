@@ -43,28 +43,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const unsubscribeDoc = onSnapshot(
             doc(db, "users", firebaseUser.uid),
             (docSnap) => {
-                if (docSnap.exists()) {
-                    setUser(docSnap.data() as UserProfile);
-                } else {
-                    // Fallback for new users or missing docs
-                    setUser({
-                        uid: firebaseUser.uid,
-                        email: firebaseUser.email || "",
-                        displayName: firebaseUser.displayName || "Explorador",
-                        photoURL: firebaseUser.photoURL || undefined,
-                        role: "customer",
-                        consent: { personalization: false, marketing: false, sensitiveData: false, location: false },
-                        preferences: { interests: [], budget: "medio", travelStyle: "cultural", accessibilityRequired: false },
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    });
-                }
+                const firestoreData = docSnap.exists() ? docSnap.data() : {};
+
+                // CRITICAL: ALWAYS use Firebase Auth uid, email, etc.
+                // Firestore data can be partial or missing these fields
+                setUser({
+                    ...firestoreData,
+                    // ALWAYS override with Firebase Auth data
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email || firestoreData.email || "",
+                    displayName: firebaseUser.displayName || firestoreData.displayName || "Explorador",
+                    photoURL: firebaseUser.photoURL || firestoreData.photoURL || undefined,
+                } as UserProfile);
+
+                console.log("🔵 AUTH CONTEXT - User Set:", {
+                    uid: firebaseUser.uid,
+                    email: firebaseUser.email,
+                    hasFirestoreData: docSnap.exists()
+                });
                 setLoading(false);
             },
             (error) => {
                 // Handle permission denied or other errors
                 console.error("Firestore auth error:", error);
-                // Create fallback user from Firebase auth data
+                // Create fallback user from Firebase auth data, prioritizing Firebase Auth data
                 setUser({
                     uid: firebaseUser.uid,
                     email: firebaseUser.email || "",
