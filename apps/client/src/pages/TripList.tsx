@@ -3,7 +3,7 @@ import { useTrips } from "@/lib/TripContext";
 import Header from "@/components/Header";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { MOCK_EXPERIENCES } from "@/lib/mockData";
+import { useExperiences } from "@/lib/useExperiences";
 import { BentoGrid, BentoCard } from "@/components/BentoLayout";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";
@@ -11,6 +11,7 @@ import Skeleton from "@/components/Skeleton";
 export default function TripList() {
     const { user, loading: authLoading } = useAuth();
     const { trips, createTrip, addMember, loading: tripsLoading } = useTrips();
+    const { experiences } = useExperiences(); // Use live experiences
     const [newTripName, setNewTripName] = useState("");
     const [isCreating, setIsCreating] = useState(false);
     const navigate = useNavigate();
@@ -20,6 +21,8 @@ export default function TripList() {
             navigate("/login?redirect=/viagens");
         }
     }, [user, authLoading, navigate]);
+
+    // ... (keep handleCreate same)
 
     const handleCreate = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -37,6 +40,7 @@ export default function TripList() {
     };
 
     if (authLoading || (!user && !authLoading)) {
+        // ... (keep skeleton same)
         return (
             <main className="min-h-screen bg-white overflow-hidden">
                 <Header />
@@ -120,11 +124,19 @@ export default function TripList() {
                             <BentoCard key={trip.id} span={trip.experienceIds.length > 2 ? "medium" : "small"} className="bg-white hover:bg-crystal/10 transition-colors border border-ocean/5">
                                 <div className="flex justify-between items-start mb-10">
                                     <div className="flex -space-x-4">
-                                        {trip.members.map((member, i) => (
-                                            <div key={i} className="w-14 h-14 rounded-2xl bg-ocean text-white border-4 border-white flex items-center justify-center text-xs font-black shadow-lg uppercase">
-                                                {member.userId === user?.uid ? user?.displayName?.charAt(0) || "VC" : "M" + (i + 1)}
-                                            </div>
-                                        ))}
+                                        {trip.members.map((member, i) => {
+                                            const isMe = member.userId === user?.uid;
+                                            const initial = isMe ? (user?.email?.charAt(0).toUpperCase() || "U") : "M" + (i + 1);
+                                            return (
+                                                <div key={i} className="w-14 h-14 rounded-2xl bg-ocean text-white border-4 border-white flex items-center justify-center text-xs font-black shadow-lg uppercase overflow-hidden">
+                                                    {isMe && user?.photoURL ? (
+                                                        <img src={user.photoURL} alt="Me" className="w-full h-full object-cover" />
+                                                    ) : (
+                                                        initial
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
                                         <button
                                             onClick={() => {
                                                 const email = prompt("Digite o email do amigo para convidar:");
@@ -148,12 +160,12 @@ export default function TripList() {
                                 <div className="space-y-4 mb-12 min-h-[140px]">
                                     {trip.experienceIds.length > 0 ? (
                                         trip.experienceIds.slice(0, 3).map(expId => {
-                                            const exp = MOCK_EXPERIENCES.find(e => e.id === expId);
+                                            const exp = experiences.find(e => e.id === expId);
                                             return (
                                                 <div key={expId} className="flex items-center gap-4 bg-crystal/20 p-4 rounded-2xl border border-ocean/5">
                                                     <div className="w-2.5 h-2.5 rounded-full bg-coral"></div>
                                                     <span className="text-xs font-bold text-ocean/80 truncate font-primary">
-                                                        {exp?.title || "Experiência Vibe"}
+                                                        {exp?.title || "Carregando..."}
                                                     </span>
                                                 </div>
                                             );
@@ -169,6 +181,21 @@ export default function TripList() {
                                 </div>
 
                                 <div className="flex items-center justify-between pt-8 border-t border-ocean/10">
+                                    <div className="flex flex-col">
+                                        <span className="text-[9px] font-black text-ocean/20 uppercase tracking-widest mb-1">Iniciado em</span>
+                                        <span className="text-xs font-black text-ocean/60">
+                                            {new Date(trip.createdAt).toLocaleDateString()}
+                                        </span>
+                                    </div>
+                                    <button
+                                        className="flex items-center gap-4 bg-ocean text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-ocean/10 hover:bg-coral transition-all active:scale-95 group/btn"
+                                        onClick={() => navigate(`/viagens/${trip.id}`)}
+                                    >
+                                        Explorar
+                                        <svg className="w-4 h-4 transform group-hover/btn:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        </svg>
+                                    </button>
                                 </div>
                             </BentoCard>
                         ))}

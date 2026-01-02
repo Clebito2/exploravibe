@@ -3,10 +3,8 @@ import { useTrips } from "@/lib/TripContext";
 import { useAuth } from "@/lib/AuthContext";
 import { useExperiences } from "@/lib/useExperiences";
 import Header from "@/components/Header";
-import { BentoGrid, BentoCard } from "@/components/BentoLayout";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import { useEffect, useState } from "react";
-import type { Trip } from "@exploravibe/shared";
 
 export default function TripDetails() {
     const { id } = useParams<{ id: string }>();
@@ -63,14 +61,22 @@ export default function TripDetails() {
                             </h1>
                         </div>
                         <div className="flex -space-x-4">
-                            {trip.members.map((member, i) => (
-                                <div key={i} className="w-16 h-16 rounded-full bg-ocean text-white border-4 border-white flex items-center justify-center text-sm font-black shadow-lg uppercase relative group cursor-help">
-                                    {member.userId === user?.uid ? "VC" : "M" + (i + 1)}
-                                    <span className="absolute -bottom-8 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
-                                        {member.role === "owner" ? "Dono" : "Membro"}
-                                    </span>
-                                </div>
-                            ))}
+                            {trip.members.map((member, i) => {
+                                const isMe = member.userId === user?.uid;
+                                const initial = isMe ? (user?.email?.charAt(0).toUpperCase() || "U") : "M" + (i + 1);
+                                return (
+                                    <div key={i} className="w-16 h-16 rounded-full bg-ocean text-white border-4 border-white flex items-center justify-center text-sm font-black shadow-lg uppercase relative group cursor-help overflow-hidden">
+                                        {isMe && user?.photoURL ? (
+                                            <img src={user.photoURL} alt="Me" className="w-full h-full object-cover" />
+                                        ) : (
+                                            initial
+                                        )}
+                                        <span className="absolute -bottom-8 bg-black text-white text-[9px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap">
+                                            {member.role === "owner" ? "Dono" : "Membro"}
+                                        </span>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 </div>
