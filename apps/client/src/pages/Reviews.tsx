@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { collection, onSnapshot, addDoc, query, where, orderBy } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/lib/AuthContext";
-import { Review, Experience } from "@exploravibe/shared";
+import type { Review, Experience } from "@exploravibe/shared";
 import { MOCK_EXPERIENCES } from "@/lib/mockData";
 import Header from "@/components/Header";
 import FlashlightCursor from "@/components/FlashlightCursor";

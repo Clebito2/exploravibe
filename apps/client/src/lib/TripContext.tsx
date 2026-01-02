@@ -1,9 +1,9 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { Trip, TripMember } from "@exploravibe/shared";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import type { Trip, TripMember } from "@exploravibe/shared";
 import { db } from "./firebase";
-import { collection, addDoc, query, where, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 
 interface TripContextType {

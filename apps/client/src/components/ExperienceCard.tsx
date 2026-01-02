@@ -1,7 +1,7 @@
 "use client";
 
-import { Experience } from "@exploravibe/shared";
-import Link from "next/link";
+import type { Experience } from "@exploravibe/shared";
+import { Link } from "react-router-dom";
 
 interface ExperienceCardProps {
     experience: Experience;
@@ -49,7 +49,7 @@ export default function ExperienceCard({ experience }: ExperienceCardProps) {
                     </div>
 
                     <Link
-                        href={`/experiencia/${experience.id}`}
+                        to={`/experiencia/${experience.id}`}
                         className="p-4 bg-crystal text-ocean hover:bg-ocean hover:text-white transition-all duration-500 rounded-2xl active:scale-95 group/btn"
                     >
                         <svg className="w-6 h-6 transform group-hover/btn:rotate-45 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">

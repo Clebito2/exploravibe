@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { collection, onSnapshot, deleteDoc, doc, query, where } from "firebase/firestore";
+import { collection, onSnapshot, deleteDoc, doc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { Experience } from "@exploravibe/shared";
+import type { Experience } from "@exploravibe/shared";
 import { MOCK_EXPERIENCES } from "@/lib/mockData";
 
 export default function Experiences() {

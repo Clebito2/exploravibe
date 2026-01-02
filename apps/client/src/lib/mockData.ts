@@ -1,4 +1,4 @@
-import { Experience } from "@exploravibe/shared";
+import type { Experience } from "@exploravibe/shared";
 
 export const MOCK_EXPERIENCES: Experience[] = [
     {

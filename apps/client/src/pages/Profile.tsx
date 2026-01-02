@@ -4,7 +4,7 @@ import { doc, setDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
-import { UserPreferences, UserConsent } from "@exploravibe/shared";
+import type { UserPreferences, UserConsent } from "@exploravibe/shared";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";
 

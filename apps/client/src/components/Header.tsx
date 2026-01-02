@@ -4,7 +4,7 @@ import { useAuth } from "@/lib/AuthContext";
 import { useCart } from "@/lib/CartContext";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import CartDrawer from "./CartDrawer";
 
@@ -19,7 +19,7 @@ export default function Header() {
 
             <header className="fixed top-0 w-full glass-morphism z-50 border-b border-ocean/10 shadow-sm backdrop-blur-2xl">
                 <div className="max-w-[1600px] mx-auto px-6 h-20 flex items-center justify-between">
-                    <Link href="/" className="text-3xl font-secondary italic text-ocean tracking-tighter">
+                    <Link to="/" className="text-3xl font-secondary italic text-ocean tracking-tighter">
                         ExploraVibe
                     </Link>
 
@@ -43,10 +43,10 @@ export default function Header() {
                                 <div className="h-8 w-px bg-ocean/10 mx-1 hidden sm:block"></div>
 
                                 <div className="flex items-center gap-6">
-                                    <Link href="/viagens" className="hidden sm:inline text-[10px] font-black uppercase tracking-widest text-ocean/60 hover:text-coral transition">
+                                    <Link to="/viagens" className="hidden sm:inline text-[10px] font-black uppercase tracking-widest text-ocean/60 hover:text-coral transition">
                                         Roteiros
                                     </Link>
-                                    <Link href="/perfil" className="hidden sm:inline text-[10px] font-black uppercase tracking-widest text-ocean/60 hover:text-coral transition">
+                                    <Link to="/perfil" className="hidden sm:inline text-[10px] font-black uppercase tracking-widest text-ocean/60 hover:text-coral transition">
                                         Vibe Profile
                                     </Link>
                                 </div>
@@ -62,7 +62,7 @@ export default function Header() {
                             </>
                         ) : (
                             <Link
-                                href="/login"
+                                to="/login"
                                 className="px-8 py-3 bg-ocean text-white text-xs font-black uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-ocean/20 hover:bg-coral transition-all active:scale-95"
                             >
                                 Iniciar Vibe

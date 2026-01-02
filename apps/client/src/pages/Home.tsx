@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { Experience } from "@exploravibe/shared";
+import type { Experience } from "@exploravibe/shared";
 import Header from "@/components/Header";
 import { useAuth } from "@/lib/AuthContext";
 import { MOCK_EXPERIENCES } from "@/lib/mockData";

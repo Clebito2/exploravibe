@@ -1,6 +1,6 @@
 "use client";
 
-import { Experience } from "@exploravibe/shared";
+import type { Experience } from "@exploravibe/shared";
 import ExperienceCard from "./ExperienceCard";
 
 interface ExperienceGridProps {

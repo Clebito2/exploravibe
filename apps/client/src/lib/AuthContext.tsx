@@ -1,10 +1,11 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { onAuthStateChanged, User } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import type { User } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "./firebase";
-import { UserProfile } from "@exploravibe/shared";
+import type { UserProfile } from "@exploravibe/shared";
 
 interface AuthContextType {
     user: UserProfile | null;

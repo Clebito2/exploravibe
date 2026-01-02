@@ -4,7 +4,7 @@ import { useTrips } from "@/lib/TripContext";
 import { useAuth } from "@/lib/AuthContext";
 import { useState } from "react";
 import Header from "@/components/Header";
-import { Experience } from "@exploravibe/shared";
+import type { Experience } from "@exploravibe/shared";
 import { MOCK_EXPERIENCES } from "@/lib/mockData";
 import FlashlightCursor from "@/components/FlashlightCursor";
 import Skeleton from "@/components/Skeleton";

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Experience } from "@exploravibe/shared";
+import type { Experience } from "@exploravibe/shared";
 
 export interface CartItem {
     id: string; // Cart-specific ID (expId + date)
