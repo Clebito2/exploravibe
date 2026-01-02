@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type { Trip, TripMember } from "@exploravibe/shared";
 import { db } from "./firebase";
-import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion, where, getDocs } from "firebase/firestore";
+import { collection, addDoc, query, onSnapshot, doc, updateDoc, arrayUnion, where, getDocs, getDoc } from "firebase/firestore";
 import { useAuth } from "./AuthContext";
 
 interface TripContextType {
@@ -101,7 +101,7 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         try {
             const usersRef = collection(db, "users");
             const q = query(usersRef, where("email", "==", email));
-            const querySnapshot = await getDocs(q);
+            const querySnapshot = await getDocs, getDoc(q);
 
             if (querySnapshot.empty) {
                 alert("Usuário não encontrado com este email.");
@@ -143,3 +143,4 @@ export const useTrips = () => {
     if (!context) throw new Error("useTrips must be used within TripProvider");
     return context;
 };
+
