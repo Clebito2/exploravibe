@@ -50,57 +50,29 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
         return () => unsubscribe();
     }, [user]);
 
-        const createTrip = async (name: string, description?: string) => {
+            const createTrip = async (name: string, description?: string) => {
         if (!user) throw new Error("Must be logged in");
 
         try {
-            console.log("🔵 CREATE TRIP - USER:", {
-                uid: user.uid,
-                email: user.email,
-                displayName: user.displayName,
-                photoURL: user.photoURL
-            });
-
-            // Build trip data WITHOUT any undefined fields
-            const tripData = {
-                name,
-                description: description || "",
+            // ULTRA SIMPLIFIED - NO OPTIONAL FIELDS AT ALL
+            const docRef = await addDoc(collection(db, "trips"), {
+                name: String(name),
+                description: String(description || ""),
                 members: [{
-                    userId: user.uid,
-                    role: "owner" as const,
-                    joinedAt: new Date().toISOString()
+                    userId: String(user.uid),
+                    role: "owner",
+                    joinedAt: String(new Date().toISOString())
                 }],
-                memberIds: [user.uid],
+                memberIds: [String(user.uid)],
                 experienceIds: [],
-                status: "planning" as const,
-                createdAt: new Date().toISOString(),
-                updatedAt: new Date().toISOString()
-            };
-
-            console.log("🟢 TRIP DATA (BEFORE addDoc):", JSON.stringify(tripData, null, 2));
-            console.log("🔍 CHECKING FOR UNDEFINED:");
-            Object.entries(tripData).forEach(([key, value]) => {
-                if (value === undefined) {
-                    console.error(`❌ FIELD "${key}" IS UNDEFINED!`);
-                }
-                if (Array.isArray(value)) {
-                    value.forEach((item, index) => {
-                        if (typeof item === 'object') {
-                            Object.entries(item).forEach(([subKey, subValue]) => {
-                                if (subValue === undefined) {
-                                    console.error(`❌ FIELD "${key}[${index}].${subKey}" IS UNDEFINED!`);
-                                }
-                            });
-                        }
-                    });
-                }
+                status: "planning",
+                createdAt: String(new Date().toISOString()),
+                updatedAt: String(new Date().toISOString())
             });
-
-            const docRef = await addDoc(collection(db, "trips"), tripData);
-            console.log("✅ TRIP CREATED SUCCESSFULLY:", docRef.id);
+            
             return docRef.id;
         } catch (error) {
-            console.error("❌ CREATE TRIP ERROR:", error);
+            console.error("Error creating trip:", error);
             throw error;
         }
     };
