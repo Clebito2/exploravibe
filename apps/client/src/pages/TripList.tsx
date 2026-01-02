@@ -30,7 +30,9 @@ export default function TripList() {
         setIsCreating(true);
         try {
             const tripId = await createTrip(newTripName);
-            alert(`✅ Roteiro "${newTripName}" criado com sucesso! ID: ${tripId}`);
+            const currentUid = user?.uid || "NO UID";
+            alert(`✅ Roteiro "${newTripName}" criado!\n\nTrip ID: ${tripId}\nSeu UID: ${currentUid}\n\nVERIFIQUE se seu UID está em memberIds no Firebase Console!`);
+            console.log("🔥 TRIP CREATED:", { tripId, userUid: currentUid });
             setNewTripName("");
             // Force reload to show new trip
             window.location.reload();

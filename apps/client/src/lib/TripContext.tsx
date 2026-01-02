@@ -75,6 +75,8 @@ export const TripProvider = ({ children }: { children: ReactNode }) => {
                     joinedAt: String(new Date().toISOString())
                 }],
                 memberIds: [String(user.uid)],
+                // DEBUG: Log what UID is being added
+                ...(console.log("🔥 CREATING TRIP - Adding UID to memberIds:", String(user.uid)) || {}),
                 experienceIds: [],
                 status: "planning",
                 createdAt: String(new Date().toISOString()),
