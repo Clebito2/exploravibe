@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f9fa;
+  --foreground: #121212;
+
+  /* Aesthetic Monad Palette 60/30/10 */
+  --ocean-deep: #004b63;
+  --cyan-crystal: #e0f7fa;
+  --coral-accent: #ff6f00;
+
+  /* Functional Colors */
+  --energy-orange: var(--coral-accent);
+  --energy-neon: #ffab40;
+
+  /* Spacing & Effects */
+  --space-lg: 3rem;
+  --glass-blur: 20px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-primary: var(--font-inter), ui-sans-serif, system-ui;
+  --font-secondary: var(--font-libre), serif;
+
+  /* Custom colors */
+  --color-ocean: var(--ocean-deep);
+  --color-crystal: var(--cyan-crystal);
+  --color-coral: var(--coral-accent);
+  --color-energy: var(--coral-accent);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-secondary {
+  font-family: var(--font-secondary);
+}
+
+.glass-morphism {
+  background: rgba(224, 247, 250, 0.4);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.premium-card {
+  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+  box-shadow: 8px 8px 16px rgba(0, 0, 0, 0.05), -8px -8px 16px rgba(255, 255, 255, 0.8);
+}
+
+.premium-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 12px 12px 24px rgba(0, 0, 0, 0.08), -12px -12px 24px rgba(255, 255, 255, 1);
+}
