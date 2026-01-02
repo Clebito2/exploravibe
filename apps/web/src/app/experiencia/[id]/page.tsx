@@ -14,7 +14,7 @@ import Skeleton from "@/components/Skeleton";
 export default function ExperienceDetails() {
     const { id } = useParams();
     const router = useRouter();
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const { addToCart } = useCart();
     const { trips, addToTrip } = useTrips();
     const [date, setDate] = useState("");
@@ -24,7 +24,7 @@ export default function ExperienceDetails() {
 
     const experience = MOCK_EXPERIENCES.find((e: Experience) => e.id === id);
 
-    if (!user && useAuth().loading) {
+    if (loading) {
         return (
             <main className="min-h-screen bg-white overflow-hidden">
                 <Header />
@@ -51,6 +51,7 @@ export default function ExperienceDetails() {
     if (!experience) {
         return <div className="p-10 text-center font-primary text-ocean">Experiência não encontrada.</div>;
     }
+
 
     const handleAddToCart = () => {
         if (!user) {
