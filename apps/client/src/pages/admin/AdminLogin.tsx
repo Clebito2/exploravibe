@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { VERSION } from "@exploravibe/shared";
 import { mapAuthError } from "@/lib/authErrors";
 import FlashlightCursor from "@/components/FlashlightCursor";
@@ -139,3 +139,4 @@ export default function AdminLogin() {
         </div>
     );
 }
+
